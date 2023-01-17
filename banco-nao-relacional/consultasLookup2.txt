@@ -1,0 +1,15 @@
+db.empresas.aggregate([
+    {$match: {nome: "vale"} },
+    {$lookup: {
+        from: "estados",
+        localField: "cidadeId",
+        foreignField: "cidades_id",
+        as: "estado"
+    } },
+    {$unwind: "$estado"},
+    {$unwind: "$estado.cidades"},
+    {$addFileds: { mesmaCidade: {$cmp: ["$estado.cidades._id", "$cidadeId"]} } },
+    {$match: {mesmaCidade: 0} },
+]).pretty()
+
+{$match: {"estado.cidade._id": "$cidadeId"} },
